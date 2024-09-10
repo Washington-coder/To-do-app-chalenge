@@ -3,21 +3,15 @@ import Logo from '../../assets/rocket.png'; // Importe o arquivo PNG
 
 export default function Header() {
     return (
-        <View style={styles.container}>
-            <View style={styles.headerContainer}>
-                <Image style={styles.logo} source={Logo} />
-                <Text style={styles.appTitleBlue}>to</Text>
-                <Text style={styles.appTitlePurple}>do</Text>
-            </View>
+        <View style={styles.headerContainer}>
+            <Image style={styles.logo} source={Logo} />
+            <Text style={styles.appTitleBlue}>to</Text>
+            <Text style={styles.appTitlePurple}>do</Text>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#262626',
-    },
     appTitleBlue: {
         fontWeight: 'bold',
         fontSize: 32,
