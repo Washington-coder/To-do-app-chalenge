@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import Header from './components/header';
 import EmptyArea from './components/EmptyArea';
-// import CheckBox from './components/Checkbox';
 import plusIcon from './assets/plus.png'
 import Icon from 'react-native-vector-icons/Ionicons'; // Importa o ícone
 
@@ -20,9 +19,16 @@ export default function App() {
   const [taskList, setTaskList] = useState([])
   const [taskText, setTaskText] = useState('')
   const [counter, setCounter] = useState(0)
+  const [doneTasksQty, setDoneTasksQty] = useState(0)
 
   useEffect(() => {
-    console.log(taskList)
+    doneQty = 0
+    taskList.forEach((task) => {
+      if (task.isChecked) {
+        doneQty++;
+      }
+    })
+    setDoneTasksQty(doneQty)
   }, [taskList])
   
 
@@ -84,13 +90,13 @@ export default function App() {
             <View style={styles.labelContainer}>
               <Text style={styles.createdTasksLabel}>Criadas</Text>
               <View style={styles.counterContainer}>
-                <Text style={{ 'color': 'white' }}>0</Text>
+                <Text style={{ 'color': 'white' }}>{counter}</Text>
               </View>
             </View>
             <View style={styles.labelContainer}>
               <Text style={styles.doneTasksLabel}>Concluídas</Text>
               <View style={styles.counterContainer}>
-                <Text style={{ 'color': 'white' }}>0</Text>
+                <Text style={{ 'color': 'white' }}>{doneTasksQty}</Text>
               </View>
             </View>
           </View>
