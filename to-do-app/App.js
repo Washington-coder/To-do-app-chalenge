@@ -1,25 +1,45 @@
 import { StatusBar } from 'expo-status-bar';
-import { 
-  TextInput, 
-  View, 
-  StyleSheet, 
-  TouchableOpacity, 
-  Image, 
-  Text 
+import { useState } from 'react';
+import {
+  TextInput,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Text,
+  ScrollView,
+  CheckBox
 } from 'react-native';
 import Header from './components/header';
 import EmptyArea from './components/EmptyArea';
 import plusIcon from './assets/plus.png'
 
 export default function App() {
+
+  const [taskList, setTaskList] = useState([])
+  const [taskText, setTaskText] = useState('')
+
+  function addTaskToList() {
+    setTaskList([...taskList, taskText])
+    setTaskText('')
+  }
+
+  function listItem(text) {
+    return (
+      <View style={styles.listItemContainer}>
+        <Text style={{ 'color': 'white' }}>{text}</Text>
+      </View>
+    )
+  }
+
   return (
     <>
       <StatusBar style="light" />
       <Header />
       <View style={styles.container}>
         <View style={styles.inputContainer}>
-          <TextInput style={styles.input} placeholder='Adicione uma nova tarefa' placeholderTextColor="#8C8C8C" />
-          <TouchableOpacity style={styles.addButton}>
+          <TextInput value={taskText} onChangeText={(value) => setTaskText(value)} style={styles.input} placeholder='Adicione uma nova tarefa' placeholderTextColor="#8C8C8C" />
+          <TouchableOpacity onPress={addTaskToList} style={styles.addButton}>
             <Image source={plusIcon} />
           </TouchableOpacity>
         </View>
@@ -28,17 +48,29 @@ export default function App() {
             <View style={styles.labelContainer}>
               <Text style={styles.createdTasksLabel}>Criadas</Text>
               <View style={styles.counterContainer}>
-                <Text style={{'color': 'white'}}>0</Text>
+                <Text style={{ 'color': 'white' }}>0</Text>
               </View>
             </View>
             <View style={styles.labelContainer}>
               <Text style={styles.doneTasksLabel}>Concluídas</Text>
               <View style={styles.counterContainer}>
-                <Text style={{'color': 'white'}}>0</Text>
+                <Text style={{ 'color': 'white' }}>0</Text>
               </View>
             </View>
           </View>
-          <EmptyArea/>
+          {
+            taskList.length === 0
+              ?
+              <EmptyArea />
+              :
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {
+                  taskList.map((task) => {
+                    return listItem(task)
+                  })
+                }
+              </ScrollView>
+          }
         </View>
       </View>
     </>
@@ -79,7 +111,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-    marginHorizontal: 30, 
+    marginHorizontal: 30,
   },
   listContainerHeader: {
     display: 'flex',
@@ -112,6 +144,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#333333',
     shadowColor: '#000',
     elevation: 5,
+  },
+  listItemContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
+    minHeight: 75,
+    padding: 12,
+    backgroundColor: '#333333',
+    shadowColor: '#000',
+    elevation: 5,
+    marginTop: 10,
+    borderRadius: 8,
+    gap: 8,
+    border: 1
   }
 })
 
