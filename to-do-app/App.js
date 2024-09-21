@@ -8,6 +8,7 @@ import {
   Text 
 } from 'react-native';
 import Header from './components/header';
+import EmptyArea from './components/EmptyArea';
 import plusIcon from './assets/plus.png'
 
 export default function App() {
@@ -37,6 +38,7 @@ export default function App() {
               </View>
             </View>
           </View>
+          <EmptyArea/>
         </View>
       </View>
     </>
