@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   TextInput,
   View,
@@ -8,26 +8,62 @@ import {
   Image,
   Text,
   ScrollView,
-  CheckBox
 } from 'react-native';
 import Header from './components/header';
 import EmptyArea from './components/EmptyArea';
+// import CheckBox from './components/Checkbox';
 import plusIcon from './assets/plus.png'
+import Icon from 'react-native-vector-icons/Ionicons'; // Importa o ícone
 
 export default function App() {
 
   const [taskList, setTaskList] = useState([])
   const [taskText, setTaskText] = useState('')
+  const [counter, setCounter] = useState(0)
+
+  useEffect(() => {
+    console.log(taskList)
+  }, [taskList])
+  
 
   function addTaskToList() {
-    setTaskList([...taskList, taskText])
+    var taskItem = {
+      id: counter,
+      text: taskText,
+      isChecked: false
+    }
+    setTaskList([...taskList, taskItem])
     setTaskText('')
+    setCounter(counter + 1)
   }
 
-  function listItem(text) {
+  function handleClickCheckbox(taskItem) {
+
+    setTaskList((prevList) =>
+      prevList.map((task) =>
+        task.id === taskItem.id ? { ...task, isChecked: !task.isChecked } : task
+      )
+    );
+  }
+
+  function CustomCheckbox(taskItem) {
+    taskItem = taskItem['taskItem']
     return (
-      <View style={styles.listItemContainer}>
-        <Text style={{ 'color': 'white' }}>{text}</Text>
+      <TouchableOpacity style={styles.checkboxContainer} onPress={() => handleClickCheckbox(taskItem)}>
+        <View style={[styles.checkbox, taskItem.isChecked && styles.checked]}>
+          {taskItem.isChecked && <Icon name="checkmark" size={20} color="#fff" />}
+        </View>
+      </TouchableOpacity>
+    )
+  }
+
+  function listItem(taskItem, index) {
+    const labelStyle = taskItem.isChecked ? styles.checkboxLabelChecked : styles.checkboxLabelUnchecked;
+
+    return (
+      <View key={index} style={styles.listItemContainer}>
+        <CustomCheckbox taskItem={taskItem} />
+        <Text style={labelStyle}>{taskItem.text}</Text>
       </View>
     )
   }
@@ -65,8 +101,8 @@ export default function App() {
               :
               <ScrollView showsVerticalScrollIndicator={false}>
                 {
-                  taskList.map((task) => {
-                    return listItem(task)
+                  taskList.map((task, index) => {
+                    return listItem(task, index)
                   })
                 }
               </ScrollView>
@@ -147,7 +183,8 @@ const styles = StyleSheet.create({
   },
   listItemContainer: {
     display: 'flex',
-    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
     width: '100%',
     minHeight: 75,
     padding: 12,
@@ -158,6 +195,34 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     gap: 8,
     border: 1
-  }
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderWidth: 2,
+    borderColor: '#ccc',
+    borderRadius: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  checked: {
+    backgroundColor: '#4EA8DE', // Cor do checkbox quando marcado
+    borderColor: '#4EA8DE',
+  },
+  checkboxLabelChecked: {
+    fontSize: 16,
+    color: '#808080',
+    textDecorationLine: 'line-through'
+  },
+  checkboxLabelUnchecked: {
+    fontSize: 16,
+    color: 'white',
+  },
 })
 
